@@ -21,6 +21,7 @@ def simp_cst_propagation(e_s, e):
     op = e.op
     # simpl integer manip
     # int OP int => int
+    # TODO: <<< >>> << >> are architecture dependant
     if op in op_propag_cst:
         while (len(args) >= 2 and
             isinstance(args[-1], ExprInt) and
@@ -46,7 +47,10 @@ def simp_cst_propagation(e_s, e):
                 x2 = mod_size2int[i2.arg.size](i2.arg)
                 o = mod_size2uint[i1.arg.size](x1 >> x2)
             elif op == '>>>':
+                rounds = i2.arg
                 o = i1.arg >> i2.arg | i1.arg << (i1.size - i2.arg)
+            elif op == '<<<':
+                o = i1.arg << i2.arg | i1.arg >> (i1.size - i2.arg)
             elif op == '/':
                 o = i1.arg / i2.arg
             elif op == '%':
