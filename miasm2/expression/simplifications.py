@@ -2,9 +2,10 @@
 #                     Simplification methods library                           #
 #                                                                              #
 
-import miasm2.expression.expression as m2_expr
-from miasm2.expression import simplifications_common, simplifications_cond
+from miasm2.expression import simplifications_common
+from miasm2.expression import simplifications_cond
 from miasm2.expression.expression_helper import fast_unify
+import miasm2.expression.expression as m2_expr
 
 # Expression Simplifier
 # ---------------------
