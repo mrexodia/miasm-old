@@ -60,6 +60,13 @@ def lhu(ir, instr, a, b):
     e.append(ExprAff(a, b.zeroExtend(32)))
     return e, []
 
+
+def lb(ir, instr, a, b):
+    e = []
+    b = ExprMem(b.arg, 8)
+    e.append(ExprAff(a, b.signExtend(32)))
+    return e, []
+
 def beq(ir, instr, a, b, c):
     e = []
     n = ExprId(ir.get_next_break_label(instr))
@@ -216,6 +223,11 @@ def l_xor(ir, instr, a, b, c):
 def seb(ir, instr, a, b):
     e = []
     e.append(ExprAff(a, b[:8].signExtend(32)))
+    return e, []
+
+def seh(ir, instr, a, b):
+    e = []
+    e.append(ExprAff(a, b[:16].signExtend(32)))
     return e, []
 
 def bltz(ir, instr, a, b):
@@ -394,6 +406,15 @@ def mult(ir, instr, a, b):
     e.append(ExprAff(R_HI, r[32:]))
     return e, []
 
+def multu(ir, instr, a, b):
+    e = []
+    size = a.size
+    r = a.zeroExtend(size * 2) * b.zeroExtend(size * 2)
+
+    e.append(ExprAff(R_LO, r[:32]))
+    e.append(ExprAff(R_HI, r[32:]))
+    return e, []
+
 def mfhi(ir, instr, a):
     e = []
     e.append(ExprAff(a, R_HI))
@@ -404,6 +425,14 @@ def mflo(ir, instr, a):
     e.append(ExprAff(a, R_LO))
     return e, []
 
+def di(ir, instr, a):
+    return [], []
+
+def ei(ir, instr, a):
+    return [], []
+
+def ehb(ir, instr, a):
+    return [], []
 
 mnemo_func = {
     "addiu": addiu,
@@ -418,6 +447,7 @@ mnemo_func = {
     "b" : l_b,
     "lbu" : lbu,
     "lhu" : lhu,
+    "lb" : lb,
     "beq" : beq,
     "bgez" : bgez,
     "bltz" : bltz,
@@ -450,6 +480,7 @@ mnemo_func = {
     "xori" : l_xor,
     "xor" : l_xor,
     "seb" : seb,
+    "seh" : seh,
     "bltz" : bltz,
     "blez" : blez,
     "wsbh" : wsbh,
@@ -476,9 +507,14 @@ mnemo_func = {
     "bc1f" : bc1f,
     "cvt.d.w":cvt_d_w,
     "mult" : mult,
+    "multu" : multu,
 
     "mfhi" : mfhi,
     "mflo" : mflo,
+
+    "di" : di,
+    "ei" : ei,
+    "ehb" : ehb,
 
     }
 
